@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "author": "Proyecto N.7 - Monitor de Ruido",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-breadboard",
+      "id": "bb1",
+      "top": -118.2,
+      "left": -83.6,
+      "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pi-pico",
+      "id": "pico",
+      "top": -114.3,
+      "left": 18.95,
+      "rotate": 270,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot1",
+      "top": -250,
+      "left": 10,
+      "attrs": { "value": "0" }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -260,
+      "left": 300,
+      "attrs": { "temperature": "24", "humidity": "50" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_verde",
+      "top": -60,
+      "left": 400,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_amarillo",
+      "top": -60,
+      "left": 460,
+      "attrs": { "color": "yellow" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_rojo",
+      "top": -60,
+      "left": 520,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_verde",
+      "top": 50,
+      "left": 390,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_amarillo",
+      "top": 50,
+      "left": 450,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_rojo",
+      "top": 50,
+      "left": 510,
+      "attrs": { "value": "220" }
+    },
+    { "type": "wokwi-buzzer", "id": "bz1", "top": 300, "left": 350, "attrs": { "volume": "0.1" } }
+  ],
+  "connections": [
+    [ "pico:3V3", "bb1:bp.1", "red", [ "v-20", "h0" ] ],
+    [ "pico:GND.3", "bb1:bn.1", "black", [ "v-20", "h0" ] ],
+    [ "pot1:GND", "bb1:bn.2", "black", [ "v0" ] ],
+    [ "pot1:VCC", "bb1:bp.2", "red", [ "v0" ] ],
+    [ "pot1:SIG", "pico:GP26", "green", [ "v0" ] ],
+    [ "dht1:VCC", "bb1:bp.5", "red", [ "v0" ] ],
+    [ "dht1:GND", "bb1:bn.5", "black", [ "v0" ] ],
+    [ "dht1:SDA", "pico:GP15", "blue", [ "v0" ] ],
+    [ "led_verde:A", "pico:GP11", "green", [ "v0" ] ],
+    [ "led_verde:C", "r_verde:1", "black", [ "v0" ] ],
+    [ "r_verde:2", "bb1:bn.6", "black", [ "v0" ] ],
+    [ "led_amarillo:A", "pico:GP12", "orange", [ "v0" ] ],
+    [ "led_amarillo:C", "r_amarillo:1", "black", [ "v0" ] ],
+    [ "r_amarillo:2", "bb1:bn.7", "black", [ "v0" ] ],
+    [ "led_rojo:A", "pico:GP13", "red", [ "v0" ] ],
+    [ "led_rojo:C", "r_rojo:1", "black", [ "v0" ] ],
+    [ "r_rojo:2", "bb1:bn.8", "black", [ "v0" ] ],
+    [ "bz1:1", "pico:GP14", "purple", [ "v0" ] ],
+    [ "bz1:2", "bb1:bn.9", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
