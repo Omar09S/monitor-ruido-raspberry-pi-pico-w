@@ -13,21 +13,46 @@ _sensor_dht = dht.DHT22(machine.Pin(config.PIN_DHT22))
 
 def leer_amplitud():
     """
-    Toma N_MUESTRAS lecturas en una ventana corta y devuelve la amplitud pico a pico (max - min).
+    Toma N_MUESTRAS lecturas en una ventana corta, descarta los valores
+    más extremos (probable ruido eléctrico del ADC) y devuelve la
+    amplitud pico a pico (max - min) del conjunto ya filtrado.
     En el micrófono real, esto representa el nivel de ruido captado.
     """
-    valor_min = 65535
-    valor_max = 0
-
+    muestras = []
     for _ in range(config.N_MUESTRAS):
-        lectura = _adc_ruido.read_u16()
-        if lectura < valor_min:
-            valor_min = lectura
-        if lectura > valor_max:
-            valor_max = lectura
+        muestras.append(_adc_ruido.read_u16())
         time.sleep(config.DELAY_MUESTRA)
 
-    return valor_max - valor_min
+    return _amplitud_filtrada(muestras)
+
+
+def _amplitud_filtrada(muestras):
+    """
+    Descarta un porcentaje de las lecturas más altas y más bajas
+    (recorte por percentil, config.PORCENTAJE_RECORTE_ADC) antes de
+    calcular la amplitud pico a pico.
+
+    Justificación: el ruido eléctrico del ADC tiende a aparecer como
+    lecturas puntuales muy alejadas del resto (1-2 muestras aisladas),
+    mientras que la señal de audio real varía de forma más continua
+    entre muestras consecutivas dentro de la ventana de ~100 ms.
+    Recortar los extremos antes de tomar max/min reduce la
+    sensibilidad a esos picos aislados sin filtrar la dinámica real
+    del sonido (a diferencia de un promedio, que sí aplanaría picos
+    genuinos).
+    """
+    n = len(muestras)
+    ordenadas = sorted(muestras)
+
+    n_recorte = int(n * config.PORCENTAJE_RECORTE_ADC)
+    # Evita recortar todo el arreglo si N_MUESTRAS fuera muy pequeño.
+    if n_recorte * 2 >= n:
+        n_recorte = 0
+
+    if n_recorte > 0:
+        ordenadas = ordenadas[n_recorte:n - n_recorte]
+
+    return ordenadas[-1] - ordenadas[0]
 
 
 def leer_nivel_simulado():
