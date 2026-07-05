@@ -1,6 +1,6 @@
 # Wi-Fi
 WIFI_SSID = "TU_WIFI"
-WIFI_PASSWORD = "TU_PASSWORD"
+WIFI_PASSWORD = "YU_PASSWORD"
 
 
 UBIDOTS_TOKEN = "TU_TOKEN_UBIDOTS"
@@ -32,6 +32,13 @@ PIN_BUZZER = 14
 # Parámetros de muestreo de ruido
 N_MUESTRAS = 200
 DELAY_MUESTRA = 0.0005  # 0.5 ms -> ventana total ~100 ms
+
+# Filtrado de ruido eléctrico del ADC (recorte por percentil)
+# Antes de calcular la amplitud pico a pico, se descarta este
+# porcentaje de las lecturas más altas y más bajas de cada ventana,
+# para que picos eléctricos aislados (1-2 muestras) no disparen una
+# amplitud falsa. 0.05 = recorta 5% arriba y 5% abajo.
+PORCENTAJE_RECORTE_ADC = 0.05
 
 # Umbrales de "decibeles" simulados
 
